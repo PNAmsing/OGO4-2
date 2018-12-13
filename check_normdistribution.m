@@ -20,12 +20,16 @@ group = {'Dropout', 'Non-Dropout'};
 
  for i = 1:length(con_var)
      for j = 1:size(Data,2)
-         figure(i); title(var_names{i});
+         figure(i); 
          var = Data{j}{:,con_var(i)};
-         subplot(1,2,j); histogram(var,'normalization','probability');
-         title({group{j} ; var_names{i}}); hold on;
-         ylabel('relative frequency'); xlabel(var_names{con_var(i)}); 
+         subplot(1,2,j); h = histogram(var,'normalization','probability');
+         title(group{j}); 
+         xlabel(var_names{con_var(i)}); ylabel('relative frequency'); 
          hold on
+         mu = mean(var,'omitnan'); sigma = std(var,'omitnan');
+         normdata = h.BinWidth * 1/(sigma*sqrt(2*pi))*exp(-0.5*((var-mu)./sigma).^2);
+         [var2,ix] = sort(var); normdata2 = normdata(ix);
+         plot(var2,normdata2,'r-')
      end
  end
  

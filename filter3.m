@@ -9,25 +9,27 @@ function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
 
 mcar = [];                          %Reserve memory: Column numbers MCAR
 nmcar = [];                         %Reserve memory: Column numbers not MCAR
-bcolumns = [2:5 9:11 13:16];        %Binary columns
-dcolumns = [6 7 12 17:56];          %Double columns
+bcolumns = [2:5 9:11 13:16];        % Variables that take binary values 
+dcolumns = [6 7 12 17:56];          % Continuous variables that do follow a normal distribution
+nncolumns = [];                     % Continuous variables that do not follow a normal distribution
 pvalues = [];
 
-for i = dcolumns                    %for columns with doubles, we use t-test
+%% Perform 2-sides t-test for continuous variables that do follow a normal distribution. 
+for i = dcolumns                    
     x = table2array(NonDropOut(:,i));
     y = table2array(DropOut(:,i));
     
     [h1,p1] = ttest2(x,y, 'Vartype', 'unequal'); %Perform two sided t test
     pvalues(i) = p1;
-    if h1 == 0                      %Null hypothesis is accepted
+    if h1 == 0                      % Null hypothesis is accepted
         mcar = [mcar, i];
     else
         nmcar = [nmcar, i];         %Null hypothesis is rejected
     end  
 end
 
-
-for j = bcolumns                    %For binary columns, we use a chi square test
+%% Perform chi-squared test for variables that take binary values. 
+for j = bcolumns                    
 %     nd = table2array(NonDropOut(:,j));
 %     do = table2array(DropOut(:,j));
     succesnd = 0;                   %We set success cases per column to 0
@@ -61,8 +63,20 @@ for j = bcolumns                    %For binary columns, we use a chi square tes
     end  
 end
 
+%% Perform Wilcoxon rank sum test for variables that do no follow a normal distribution. 
+for nn = nncolumns   
+    nnvar_do = DropOut{:,nn};
+    nnvar_ndo = NonDropOut{:,nn}; 
+    [p3,h3] = ranksum(nnvar_do,nnvar_ndo);
+    pvalues(nncolumns) = p3;   
+    if h3 == 0               %Null hypothesis is accepted
+        mcar = [mcar, nn];
+    else
+        nmcar = [nmcar, nn];  %Null hypothesis is rejected
+    end  
+end
+
 nmcar = sort(nmcar);         %Sort columns in ascending order
 file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
 end
 
-%% TO DO; implement test for dist. gamma distribution
