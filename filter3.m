@@ -1,6 +1,6 @@
 function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
 %2-sided t-test and chi squared test for the the Non-completing patients and for the
-%completing patients per variable. Null hypothesis: equal medians
+%completing patients per variable. Null hypothesis: equal means
     %Input: tables with different patient groups. This file takes the
     %different kinds of drop outs together as general drop outs. File which
     %needs to be filtered for MCAR
@@ -10,7 +10,7 @@ function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
 mcar = [];                          %Reserve memory: Column numbers MCAR
 nmcar = [];                         %Reserve memory: Column numbers not MCAR
 bcolumns = [2:5 9:11 13:16];        %Binary columns
-dcolumns = [6 12 17:width(NonDropOut)]; %Double columns
+dcolumns = [6 7 12 17:56];          %Double columns
 pvalues = [];
 
 for i = dcolumns                    %for columns with doubles, we use t-test
@@ -53,7 +53,7 @@ for j = bcolumns                    %For binary columns, we use a chi square tes
     z = [height(NonDropOut) height(DropOut)]; %Input for file: total cases for both groups
     
     [h2,p2] = prop_test(w,z,false);      %perform chi square test
-    pvalues(length(dcolumns)+j) = p2;   
+    pvalues(bcolumns) = p2;   
     if h2 == 0               %Null hypothesis is accepted
         mcar = [mcar, j];
     else
@@ -65,3 +65,4 @@ nmcar = sort(nmcar);         %Sort columns in ascending order
 file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
 end
 
+%% TO DO; implement test for dist. gamma distribution

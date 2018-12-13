@@ -4,18 +4,17 @@
 %  the continuous variables in the dataset, which are age at surgery,
 %  length, weight, lab measurements (except CRP), dist, PCSC and MCSC.
 
-%% Continuous variables
-%  Con_var contains the column numbers of the continuous variables 
-con_var = [6, 7, 12, 55:57];
-var_names = {'age','length','weight','PCSC','MCSC','dist'};
-% lab measurements are 17:24, 26:54 , will later be added 
-
 %% Dataset 
 %  The two tables for dropout and non-dropout are stored in a cell so that 
 %  each table can easily be recalled in a for-loop.
 load('DropOut.mat'); load('NonDropOut.mat')
 Data = {DropOut,NonDropOut};
 
+%% Continuous variables
+%  Con_var contains the column numbers of the continuous variables 
+con_var = [6, 7, 12,17:24,26:57];
+var_names = DropOut.Properties.VariableNames;
+group = {'Dropout', 'Non-Dropout'};
 %% Plot histogram of variables 
 %  Histograms for each variable are plotted via histogram.m 
 
@@ -24,6 +23,8 @@ Data = {DropOut,NonDropOut};
          figure(i); title(var_names{i});
          var = Data{j}{:,con_var(i)};
          subplot(1,2,j); histogram(var,'normalization','probability');
+         title({group{j} ; var_names{i}}); hold on;
+         ylabel('relative frequency'); xlabel(var_names{con_var(i)}); 
          hold on
      end
  end
