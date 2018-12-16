@@ -1,21 +1,28 @@
 function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
-%2-sided t-test and chi squared test for the the Non-completing patients and for the
-%completing patients per variable. Null hypothesis: equal means
-    %Input: tables with different patient groups. This file takes the
-    %different kinds of drop outs together as general drop outs. File which
-    %needs to be filtered for MCAR
-    % Output: arrays with column numbers for MCAR and Not MCAR and the new
-    % file which has been filtered. 
+% Statistical testing of variables for dropouts (DO) and non-dropouts(NDO). 
+% The alternative hypothesis for each test means there is a significant 
+% difference for DO and NDO for a certain variable. For different variables 
+% different hypothesis testing are used. 
+% Input: 
+% - DropOut: table with measurements of the dropoput group. 
+% - NonDropOut: table with measurements of the nondropout group.
+% both tables are created in the main file. 
+% - file: file with screening data which needs to be filtered for MCAR. 
+% Output:
+% - mcar: variables that have no significant difference for DO and NDO
+% - nmcar: variables that have a significant difference for DO and NDO
+% - file: file filtered for MCAR variables
+% - p-values: resulting p-values of hypothesis testing for each variable. 
 
-mcar = [];                          %Reserve memory: Column numbers MCAR
-nmcar = [];                         %Reserve memory: Column numbers not MCAR
-bincolumns = [2,4,5,10,11,13:16];        % Variables that take binary values 
-ncolumns = [6,7,12,17,18,22:24,29,32,34,37,40:42,44,45,49,54];          % Continuous variables that do follow a normal distribution
-nncolumns = [19:21,26:28,30,31,33,35,36,38,39,43,46:48,50:53,55:57];                     % Continuous variables that do not follow a normal distribution
+mcar = [];                                                                  % Reserve memory: Column numbers MCAR
+nmcar = [];                                                                 % Reserve memory: Column numbers not MCAR
+bincolumns = [2,4,5,10,11,13:16,25];                                           % Variables that take binary values 
+ncolumns = [6,7,12,17,18,22:24,29,32,34,37,40:42,44,45,49,54];              % Continuous variables that do follow a normal distribution
+nncolumns = [19:21,26:28,30,31,33,35,36,38,39,43,46:48,50:53,55:57];        % Continuous variables that do not follow a normal distribution
 tricolumns = [3 9];
 pvalues = [];
 
-%% Perform 2-sides t-test for continuous variables that do follow a normal distribution. (ncolumns)
+%% Perform 2-sided t-test for continuous variables that do follow a normal distribution. (ncolumns)
 for i = ncolumns                    
     x = table2array(NonDropOut(:,i));
     y = table2array(DropOut(:,i));
@@ -56,7 +63,7 @@ for j = bincolumns
     z = [height(NonDropOut) height(DropOut)]; %Input for file: total cases for both groups
     
     [h2,p2] = prop_test(w,z,false);      %perform chi square test
-    pvalues(bincolumns) = p2;   
+    pvalues(j) = p2;   
     if h2 == 0               %Null hypothesis is accepted
         mcar = [mcar, j];
     else
@@ -69,7 +76,7 @@ for nn = nncolumns
     nnvar_do = DropOut{:,nn};
     nnvar_ndo = NonDropOut{:,nn}; 
     [p3,h3] = ranksum(nnvar_do,nnvar_ndo);
-    pvalues(nncolumns) = p3;   
+    pvalues(nn) = p3;   
     if h3 == 0               %Null hypothesis is accepted
         mcar = [mcar, nn];
     else
@@ -78,23 +85,23 @@ for nn = nncolumns
 end
 
 %% Perform test for variables with 3 possible outcomes
-    outcomes_DO  = unique(DropOut{:,tt}); 
-    outcomes_DO  = outcomes_DO(~isnan(outcomes_DO));        
-    if length(outcomes_NDO) ~= length(outcomes_DO)          % Check if possible outcomes are the same for both groups
-        disp('Different possible outcomes for Dropout and Non-dropout')
+% Perform chi-square test for discrete variables at 5% significance level.
+% H0: data comes from common distribution
+% H1: data does not come from common distribution
+for tri = tricolumns 
+    var_DO  = DropOut{:,tri}; 
+    var_NDO = NonDropOut{:,tri};
+    [h4,p4]   = chi2test2(var_DO,var_NDO,0.05); 
+    pvalues(tri) = p4;
+    if h4 == 0
+        mcar = [mcar,tri];
+    else 
+        nmcar = [nmcar,tri];
     end
-    prop_NDO = []; prop_DO = [];                            % Save memory to store the counts of each possible outcome
-    for outcome = 1:length(outcomes_DO)
-        count_DO = length(find(DropOut{:,tt}==outcomes_DO(outcome)));       % Count how many times a certain value occurs in dropout group
-        count_NDO= length(find(NonDropOut{:,tt}==outcomes_NDO(outcome)));   % Count how many times a certain value occurs in nondropout group
-        prop_NDO = [prop_NDO,count_NDO];                                    % Store the counts in arrays.  
-        prop_DO  = [prop_DO,count_DO];                                      % These 'proportions' are needed for hypothesis testing.
-    end
-    % implement Statistical test 
-    
-    
 end
+    
 nmcar = sort(nmcar);         %Sort columns in ascending order
-file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
+mcar  = sort(mcar);
+%file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
 end
 
