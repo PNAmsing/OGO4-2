@@ -54,7 +54,6 @@ for col = DropOut.Properties.VariableNames
         end
         w = [succesnd succesdo];        %Input for file: success cases for both groups
         z = [height(NonDropOut) height(DropOut)]; %Input for file: total cases for both groups
-    
         [h2,p2] = prop_test(w,z,false);      %perform chi square test
         pvalues(it) = p2;   
         if h2 == 0               %Null hypothesis is accepted
@@ -64,8 +63,7 @@ for col = DropOut.Properties.VariableNames
         end  
 %% Perform Wilcoxon rank sum test for variables that do no follow a normal distribution. (nncolumns)
     elseif ismember(col,notnormcolumns) == 1 
-        nnvar_do = DropOut{:,col};
-        nnvar_ndo = NonDropOut{:,col}; 
+        nnvar_do = DropOut{:,col}; nnvar_ndo = NonDropOut{:,col}; 
         [p3,h3] = ranksum(nnvar_do,nnvar_ndo);
         pvalues(it) = p3;   
         if h3 == 0               %Null hypothesis is accepted
@@ -77,8 +75,7 @@ for col = DropOut.Properties.VariableNames
 % Perform chi-square test for discrete variables at 5% significance level.
 % H0: data comes from common distribution H1: data does not come from common distribution
     elseif ismember(col,tricolumns) == 1
-        var_DO  = DropOut{:,col}; 
-        var_NDO = NonDropOut{:,col};
+        var_DO  = DropOut{:,col}; var_NDO = NonDropOut{:,col};
         [h4,p4]   = chi2test2(var_DO,var_NDO,0.05); 
         pvalues(it) = p4;
         if h4 == 0
