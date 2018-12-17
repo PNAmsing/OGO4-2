@@ -1,6 +1,5 @@
 function [ emptyline ] = absent( patient_table,intcolumns,linenr )
-% This function checks if the patient was present for the appointment or
-% not
+% This function checks if the patient was present for appointment or not
 %   Input: the data for the 6 appointments, the variables that are
 %   considered "interesting" as defined in function dropoutcheck,
 %   linenumber we are currently analysing (either 5 or 6)
