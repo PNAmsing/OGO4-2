@@ -26,9 +26,8 @@ it = 1;
 for col = DropOut.Properties.VariableNames 
 %% Perform 2-sided t-test for continuous variables that do follow a normal distribution. (ncolumns)
     if ismember(col,ncolumns) == 1
-        x = table2array(NonDropOut(:,col));
-        y = table2array(DropOut(:,col));
-        [h1,p1] = ttest2(x,y, 'Vartype', 'unequal'); %Perform two sided t test
+        x = table2array(NonDropOut(:,col)); y = table2array(DropOut(:,col));
+        [h1,p1] = ttest2(x,y, 'Vartype', 'unequal'); 
         pvalues(it) = p1;
         if h1 == 0                      % Null hypothesis is accepted
             mcar{end+1} = col;
@@ -37,9 +36,7 @@ for col = DropOut.Properties.VariableNames
         end  
 %% Perform chi-squared test for variables that take binary values. (bincolumns)
     elseif ismember(col,bincolumns) == 1
-        succesnd = 0;                   %We set success cases per column to 0
-        succesdo = 0;                   
-
+        succesnd = 0; succesdo = 0;                   
         for k = 1:height(NonDropOut)    %Calculate success cases for non drop out group
             value = NonDropOut{k,col};
             if value == 1
@@ -47,7 +44,6 @@ for col = DropOut.Properties.VariableNames
                 succesnd = succesnd + 1;
             end
         end
-    
         for l = 1:height(DropOut)       %Calculate success cases for drop out group
             value = DropOut{l,col};
             if value == 1
@@ -90,10 +86,8 @@ for col = DropOut.Properties.VariableNames
             nmcar{end+1} = col;
         end
     end
-    
     it = it + 1;
 end
-
 %file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
 end
 
