@@ -12,20 +12,21 @@ function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
 % - nmcar: variables that have a significant difference for DO and NDO
 % - file: file filtered for MCAR variables
 % - p-values: resulting p-values of hypothesis testing for each variable. 
+
 mcar = {}; nmcar = {}; pvalues=[];  % Reserve memory
 % Variables that take binary values 
 bincolumns = {'geslacht','procok','compl','alcohol','depri','hypert','diabet','dyslip','osas','CRP'}; 
 % Continuous variables that do follow a normal distribution
-ncolumns = {'age_at_surgery', 'lengte','gewicht','albumin','ALP','calcium', 'cholesterol','cholHDLratio','phosphate',...
+normcolumns = {'age_at_surgery', 'lengte','gewicht','albumin','ALP','calcium', 'cholesterol','cholHDLratio','phosphate',...
             'HDL','hemoglobin','potassium','LDL','LD','leukocytes','MCV','sodium','thrombocytes','vitB1'};
 % Continuous variables that do not follow a normal distribution
-nncolumns = {'ALAT','ASAT','bilirubin','erythrocytes','ferritin','folate','glucose','GGT','hematocrit','HbA1c', 'iron',...
+notnormcolumns = {'ALAT','ASAT','bilirubin','erythrocytes','ferritin','folate','glucose','GGT','hematocrit','HbA1c', 'iron',...
             'creatinine','MDRD','MCH','PTH','PT','triglycerides','urea','vitB6','vitB12','vitD25OH','PCSC','MCSC','dist'};        
 tricolumns = {'datok','roken'};
 it = 1;
 for col = DropOut.Properties.VariableNames 
 %% Perform 2-sided t-test for continuous variables that do follow a normal distribution. (ncolumns)
-    if ismember(col,ncolumns) == 1
+    if ismember(col,normcolumns) == 1
         x = table2array(NonDropOut(:,col)); y = table2array(DropOut(:,col));
         [h1,p1] = ttest2(x,y, 'Vartype', 'unequal'); 
         pvalues(it) = p1;
@@ -62,7 +63,7 @@ for col = DropOut.Properties.VariableNames
             nmcar{end+1} = col;  %Null hypothesis is rejected
         end  
 %% Perform Wilcoxon rank sum test for variables that do no follow a normal distribution. (nncolumns)
-    elseif ismember(col,nncolumns) == 1 
+    elseif ismember(col,notnormcolumns) == 1 
         nnvar_do = DropOut{:,col};
         nnvar_ndo = NonDropOut{:,col}; 
         [p3,h3] = ranksum(nnvar_do,nnvar_ndo);
