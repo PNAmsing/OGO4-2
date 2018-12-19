@@ -1,17 +1,18 @@
-function [count] = Count(file)
+function [count] = Count(file,variab)
 %counts amount of 1's in certain variables.
 count=[];
-variab = [1,4,7,9];
+% variab = [10,5,9];
 patients=height(file);
-nr1=0;
-for i = 1:length(variab)
+
+for i = variab
+    nr1=0;
     for j = 1:patients      
+        %if isempty(file{j,i})==0
         if file{j,i}==1
             nr1=nr1+1;
-        end
+        end 
     end
     count = [count nr1];
-    
-    
+        
 end
 
