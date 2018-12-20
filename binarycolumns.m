@@ -20,7 +20,7 @@ for i = 1 : height(fullfile)
     end   
 end
 %% Convert strings to doubles
-columnstrings=[2 3 4 5 7 9:57];                                              %The strings in the table are made into doubles so
+columnstrings=[2 4 5 7 9:57];                                              %The strings in the table are made into doubles so
 for i = columnstrings                                                      %calculations can be done with the numbers (e.g. average)
     fullfile.(i)=str2double(fullfile.(i));
 end 
