@@ -5,7 +5,7 @@ function [ fullfile ] = binarycolumns( fullfile )
 convertto1={'yes','>6','bypass','F'};
 convertto0={'no', 'never','<=6','sleeve','M'};
 convertto2={'quit'}; 
-variables = [2,4,5,9,10,11,13,14,15,16,25];
+variables = {'geslacht','procok','compl','roken','alcohol','hypert','diabet','dyslip','osas','CRP'};
 for i = 1 : height(fullfile)
     for k = 1 : length(variables)
         j = variables(k);
