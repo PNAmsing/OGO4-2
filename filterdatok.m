@@ -1,6 +1,8 @@
 function [ pat2012,pat2013,pat2014 ] = filterdatok( scrfile )
 %Make different patient tables, selected on the year the patients received
 %surgery.
+% input: patient file with only screening appointments
+% output: patient files for groups based on the surgery year
 
 var = {'datok'};
 pat2012 = table;
