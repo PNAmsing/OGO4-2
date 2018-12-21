@@ -1,7 +1,7 @@
 %% Main file to organize the patients into either drop outs or patients who
 %finish the treatment and to preprocess the file
 %% Read in file and convert to proper data type
-clear all -except missingness, close all;
+%clear all -except missingness, close all;
 
 fullfile = readtable('OGOCBIOBariatriemissingness.csv');                   %Read in the data as a table
 
