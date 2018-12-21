@@ -1,4 +1,4 @@
-function [ uitput,sigcol ] = filter2( missingness,filename, uitput,threshold )
+function [ uitput,sigcol ] = thresholding( missingness,filename, uitput,threshold )
 % This function filters out the variables with too much missingness
     % It takes into account how many empty cells there are because of
     % missed appointments (missingness) and then filters the variables with

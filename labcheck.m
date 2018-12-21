@@ -1,5 +1,5 @@
-function [ patnolab,patlab ] = labrats( inputfile,missingness,low,high )
-% This function will sort a file into patients who do and patient who do not
+function [ patnolab,patlab ] = labcheck( inputfile,missingness,low,high )
+% This function will sort a file into patients who do and patients who do not
 % miss the lab values. These variables all miss the same amount of data.
 %   Input:      - A table with all patients and only "screening" appointments
 %               - Array with missing values for screening appointment per variable in dataset

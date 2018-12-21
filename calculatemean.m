@@ -1,5 +1,5 @@
 function [ medianarray,stdarray ] = calculatemean( tablename)
-%calculate the mean of each column and store this in a new array
+%calculate the mean and stdof each column and store this in a new array
 %   Detailed explanation goes here
 
 nrrows=height(tablename);

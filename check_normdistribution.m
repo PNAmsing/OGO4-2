@@ -26,42 +26,10 @@ group = {'Dropout', 'Non-Dropout'};
          title(group{j}); 
          xlabel(var_names{con_var(i)}); ylabel('relative frequency'); 
          hold on
-         mu = mean(var,'omitnan'); sigma = std(var,'omitnan');
+         mu = mean(var,'omitnan'); 
+         sigma = std(var,'omitnan');
          normdata = h.BinWidth * 1/(sigma*sqrt(2*pi))*exp(-0.5*((var-mu)./sigma).^2);
          [var2,ix] = sort(var); normdata2 = normdata(ix);
          plot(var2,normdata2,'r-')
      end
  end
- 
-%% Plot normal probability plot
-%  The normal probability plot is plotted for each variable via normplot.m.
-%  The closer the data points are to the line, the more likely the 
-%  assumption of a normal distribution is. 
- for i = 1:length(con_var)
-     for j = 1:size(Data,2)
-         figure(i); title(var_names{i});
-         var = Data{j}{:,con_var(i)};
-         subplot(1,2,j); normplot(var);
-         hold on
-     end
- end
-
-%% Anderson-Darling test
-% The Anderson-Darling test is a statistical test that checks whether a
-% given sample of data is drawn from a certain probability distrubtion.
-% adtest.m checks whether data is from a normal distribution. The null 
-% hypothesis is that data is normally distributed. A value of 1 for h means
-% the null hypothesis is being rejected. 
-% Missing values, indicated by NaN, are ignored. 
-
-h=[];
-p=[];
- for i = 1:length(con_var)
-     for j = 1:size(Data,2)
-         var = Data{j}{:,con_var(i)};
-         [hj,pj]=adtest(var);
-         h(i,j) = hj; p(i,j)=pj;
-     end
- end
-
-

@@ -1,4 +1,4 @@
-function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
+function [ mcar, nmcar, pvalues ] = statistics(NonDropOut, DropOut, file)
 % Statistical testing of variables for dropouts (DO) and non-dropouts(NDO). 
 % The alternative hypothesis for each test means there is a significant 
 % difference for DO and NDO for a certain variable. For different variables 
@@ -10,7 +10,6 @@ function [ mcar, nmcar, file , pvalues ] = filter3(NonDropOut, DropOut, file)
 % Output:
 % - mcar: variables that have no significant difference for DO and NDO
 % - nmcar: variables that have a significant difference for DO and NDO
-% - file: file filtered for MCAR variables
 % - p-values: resulting p-values of hypothesis testing for each variable. 
 
 mcar = {}; nmcar = {}; pvalues=[];  % Reserve memory
@@ -86,6 +85,5 @@ for col = DropOut.Properties.VariableNames
     end
     it = it + 1;
 end
-%file = file(:,nmcar);        %Output file now only has the columns which are not MCAR
 end
 

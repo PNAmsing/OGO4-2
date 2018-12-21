@@ -1,7 +1,9 @@
 %% Main file to organize the patients into either drop outs or patients who
-%finish the treatment and to preprocess the file
+%finish the treatment and to preprocess the file. See README for detailed
+%information
+
 %% Read in file and convert to proper data type
-%clear all -except missingness, close all;
+clear all -except missingness, close all;
 
 fullfile = readtable('OGOCBIOBariatriemissingness.csv');                   %Read in the data as a table
 
@@ -21,7 +23,7 @@ end
 %% Filter for too much missing data
 %This function will filter out the variables with too much missing
 %measurements even though the patients were present at the appointment
-[~,sigcol]=filter2(missingness,scrfile,scrfile,0.2);
+[~,sigcol]=thresholding(missingness,scrfile,scrfile,0.2);
 
 %% Make new file with only complete cases
 % Patients who have measurements for all significant values
@@ -34,8 +36,4 @@ complete_casesTOT=[complete_casesDO; complete_casesNDO];
 %randomness for the different groups
 scrfile1=table;
 scrfile1=[NonDropOut;DropOut];
-[mcar,nmcar,scrfilefilter2,pvalues] = filter3(NonDropOut, DropOut,scrfile1);
-
-%[num,txt,raw]=xlsread('OGOCBIOBariatriemissingness.csv','A1:BE1');             %find headers for all variables
-%headers=txt;
-
+[mcar,nmcar,scrfilefilter2,pvalues] = statistics(NonDropOut, DropOut,scrfile1);
