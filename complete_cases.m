@@ -5,7 +5,7 @@ function [file] = complete_cases (variables,file )
 
 %variables = [2,4,6,7,10,12,13,14,15,16,30];
 
-variables = [variables 9 57 58];
+variables = [variables 9 55 56 57 58];
 
 % Total number of patients
 patients = height(file);
