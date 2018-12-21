@@ -1,4 +1,4 @@
-function [count] = count(file,variab)
+function [count] = countones(file,variab)
 %Counts amount of 1s in certain variables.
 % Input: file which needs to be counted for column numbers in variab
 % Output: count of 1s in an array. The index is the same index as the input array
