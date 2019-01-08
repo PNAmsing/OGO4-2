@@ -1,6 +1,6 @@
 %% Add extra columns so dropout names can be added. 
-data = complete_casesTOT;
-newString = "Dropout type";
+data = mix41;
+newString = 'Dropout type';
 data.newVar(:) = {newString}; 
 for pat = 1 : height(data)
     if data{pat,end-1} == 1
@@ -15,5 +15,5 @@ end
 % iedere keer aangepast worden. 
 % https://nl.mathworks.com/matlabcentral/answers/231614-how-can-i-copy-and-paste-figures-from-classification-learner
 hFigs = findall(groot,'type','figure');
-print(hFigs(1),'Confusion matrix','-dpng');
-print(hFigs(2),'ROC','-dpng');
+print(hFigs(1),'Confusion matrix, equal groups 3 features (stat tests)','-dpng');
+print(hFigs(2),'ROC,equal groups 3 features (stat tests))','-dpng');
