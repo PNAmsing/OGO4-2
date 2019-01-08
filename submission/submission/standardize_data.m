@@ -8,4 +8,5 @@ end
 mean_var = [mean_var,0]; std_var = [std_var,1];
 complete_casesTOT_stand = array2table(((table2array(complete_casesTOT)) - mean_var)./std_var);  
 
-complete_casesTOT_stand.Properties.VariableNames = complete_casesTOT.Properties.VariableNames
+
+
